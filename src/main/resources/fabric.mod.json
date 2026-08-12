@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "bluemap-displaynames",
+  "version": "${version}",
+  "name": "BlueMap DisplayNames",
+  "description": "Make BlueMap use display names instead of usernames.",
+  "environment": "server",
+  "entrypoints": {
+    "server": ["codes.antti.bluemap.displaynames.BlueMapDisplayNames"]
+  },
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "minecraft": "*",
+    "bluemap": "*"
+  }
+}
