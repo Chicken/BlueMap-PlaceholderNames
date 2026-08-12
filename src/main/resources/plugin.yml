@@ -1,0 +1,6 @@
+name: BlueMapDisplayNames
+version: "${version}"
+main: codes.antti.bluemap.displaynames.BlueMapDisplayNamesSpigot
+description: Make BlueMap use display names instead of usernames.
+api-version: "${minecraft_version}"
+depend: [BlueMap]

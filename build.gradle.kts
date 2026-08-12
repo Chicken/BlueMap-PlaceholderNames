@@ -7,6 +7,12 @@ repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net")
     maven("https://repo.bluecolored.de/releases")
+    maven("https://repo.papermc.io/repository/maven-public/") {
+        content {
+            includeGroup("org.bukkit")
+            includeGroup("org.spigotmc")
+        }
+    }
 }
 
 java {
@@ -22,30 +28,32 @@ dependencies {
     implementation(libs.fabric.loader)
     implementation(libs.fabric.api)
     compileOnly(libs.bluemap.api)
+    compileOnly(libs.spigot.api)
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "utf-8"
+    options.release = 25
 }
 
 tasks.withType<AbstractArchiveTask>().configureEach {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
     isReproducibleFileOrder = true
     isPreserveFileTimestamps = false
 }
 
 tasks.named<ProcessResources>("processResources") {
-    from("src/main/resources") {
-        include("fabric.mod.json")
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    val properties = mapOf(
+        "version" to project.version,
+        "minecraft_version" to libs.versions.minecraft.get(),
+        "fabric_loader_version" to libs.versions.fabric.loader.get(),
+        "fabric_api_version" to libs.versions.fabric.api.get().substringBefore("+"),
+    )
 
-        expand(
-            "version" to project.version,
-            "fabric_loader_version" to libs.versions.fabric.loader.get(),
-            "fabric_api_version" to libs.versions.fabric.api.get().substringBefore("+"),
-        )
+    inputs.properties(properties)
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+
+    filesMatching(listOf("fabric.mod.json", "plugin.yml")) {
+        expand(properties)
     }
-}
-
-tasks.named("build") {
-    dependsOn(tasks.named("jar"))
 }
