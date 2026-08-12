@@ -7,6 +7,16 @@ repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net")
     maven("https://repo.bluecolored.de/releases")
+    maven("https://repo.extendedclip.com/releases/") {
+        content {
+            includeGroup("me.clip")
+        }
+    }
+    maven("https://maven.nucleoid.xyz/") {
+        content {
+            includeGroup("eu.pb4")
+        }
+    }
     maven("https://repo.papermc.io/repository/maven-public/") {
         content {
             includeGroup("org.bukkit")
@@ -29,6 +39,8 @@ dependencies {
     implementation(libs.fabric.api)
     compileOnly(libs.bluemap.api)
     compileOnly(libs.spigot.api)
+    compileOnly(libs.spigot.placeholder.api)
+    implementation(libs.fabric.placeholder.api)
 }
 
 tasks.withType<JavaCompile>().configureEach {

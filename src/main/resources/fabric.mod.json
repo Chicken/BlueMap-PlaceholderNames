@@ -1,17 +1,18 @@
 {
   "schemaVersion": 1,
-  "id": "bluemap-displaynames",
+  "id": "bluemap-placeholdernames",
   "version": "${version}",
-  "name": "BlueMap DisplayNames",
-  "description": "Make BlueMap use display names instead of usernames.",
+  "name": "BlueMap-PlaceholderNames",
+  "description": "Use placeholder templates for BlueMap player names.",
   "environment": "server",
   "entrypoints": {
-    "server": ["codes.antti.bluemap.displaynames.BlueMapDisplayNames"]
+    "server": ["codes.antti.bluemap.placeholdernames.BlueMapPlaceholderNamesFabric"]
   },
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_api_version}",
     "minecraft": "*",
-    "bluemap": "*"
+    "bluemap": "*",
+    "placeholder-api": ">=3.1.0-beta.1"
   }
 }

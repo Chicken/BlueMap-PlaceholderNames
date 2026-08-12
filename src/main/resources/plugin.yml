@@ -1,6 +1,6 @@
-name: BlueMapDisplayNames
+name: BlueMap-PlaceholderNames
 version: "${version}"
-main: codes.antti.bluemap.displaynames.BlueMapDisplayNamesSpigot
-description: Make BlueMap use display names instead of usernames.
+main: codes.antti.bluemap.placeholdernames.BlueMapPlaceholderNamesSpigot
+description: Use placeholder templates for BlueMap player names.
 api-version: "${minecraft_version}"
-depend: [BlueMap]
+depend: [BlueMap, PlaceholderAPI]
