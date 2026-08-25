@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Prepare release
+        id: release
+        shell: bash
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release tag: $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+
+          version="${GITHUB_REF_NAME#v}"
+          previous_tag=""
+
+          while IFS= read -r tag; do
+            if [[ "$tag" != "$GITHUB_REF_NAME" && "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              previous_tag="$tag"
+              break
+            fi
+          done < <(git tag --sort=-version:refname)
+
+          repository_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          if [[ -n "$previous_tag" ]]; then
+            notes="$repository_url/compare/$previous_tag...$GITHUB_REF_NAME"
+          else
+            notes="$repository_url/commits/$GITHUB_REF_NAME"
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "notes=$notes" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: ./gradlew build -PreleaseVersion="${{ steps.release.outputs.version }}"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_NOTES: ${{ steps.release.outputs.notes }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME" build/libs/*.jar
+          --title "$GITHUB_REF_NAME"
+          --notes "$RELEASE_NOTES"
+          --verify-tag
