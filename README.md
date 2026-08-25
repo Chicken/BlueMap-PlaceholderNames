@@ -1,5 +1,8 @@
 # BlueMap-PlaceholderNames
 
+> [!CAUTION]
+> This is vibecoded. It is however quite simple, reviewed, and tested.
+
 BlueMap-PlaceholderNames replaces BlueMap's live player names with a placeholder template. Placeholder values are refreshed on the Minecraft server thread every second and cached for BlueMap's web requests.
 
 ## Requirements
